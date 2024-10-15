@@ -4,3 +4,14 @@
 Например: дано 236 => 2*2 + 3*3 + 6*6 = 49 
 
 """
+
+
+
+s=0
+num = "236"
+for n in num:
+    s += int(n)**2
+print(s)
+
+# вариант2
+print(sum([int(n)**2 for n in input('?')]))

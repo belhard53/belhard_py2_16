@@ -14,3 +14,31 @@
 
 """
 
+
+
+import string
+great = string.ascii_letters + string.digits + "_"
+
+def check_login(user):
+    for c in user['login']:
+        if not c in great:            
+            return False
+    return True
+
+users = [
+    {"name":"some_name1", "login":"some_login1!", "password":"123456" },
+    {"name":"some_name2", "login":"some_login2", "password":"1234" },
+    {"name":"some_name3", "login":"some_login3", "password":"12345678" },
+    {"name":"some_name4", "login":"some_login4@", "password":"123" }
+]
+
+bad_pas = list(filter(lambda x:len(x['password'])<5, users))
+print(*bad_pas, sep="\n")
+print()
+
+# варианты с lambda
+# bad_login = list(filter(lambda x: list(filter(lambda x:not x in great, x['login'])), users))
+# bad_login = list(filter(lambda x: any(map(lambda x: not x in great, x['login'])), users))
+
+gr_login = list(filter(check_login, users))
+print(*gr_login, sep="\n")

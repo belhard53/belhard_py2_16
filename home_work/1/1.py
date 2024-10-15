@@ -4,3 +4,20 @@
 кокай раз по счету выполняется эта функция. 
 
 """
+
+
+n = 0
+k = 1
+
+def pn(txt):
+    global n
+    
+    n = n + 1
+    print(n, txt)
+    
+    
+pn('qwqwq')
+pn('qwqwq')
+pn('qwqwq')
+pn('qwqwq')
+pn('qwqwq')
