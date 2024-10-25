@@ -18,7 +18,7 @@ def send_file(file_name, conn):
         
         
 def is_file(path):        
-    if path[-4:] in ['.jpg','.png','.gif', '.ico'] or path[-5:] in ['.html']:
+    if path[-4:] in ['.jpg','.png','.gif', '.ico', '.txt'] or path[-5:] in ['.html']:
         return True
     return False
        
@@ -26,8 +26,8 @@ def is_file(path):
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # определили tcp/ip
 
 # HOST = ('192.168.0.31', 7777)
-# HOST = ('127.0.0.1', 7777)
-HOST = ('192.168.100.6', 7771)
+HOST = ('127.0.0.1', 7777)
+# HOST = ('192.168.100.6', 7771)
 
 sock.bind(HOST)
 sock.listen()
@@ -47,8 +47,18 @@ ERR_404 = b'HTTP/1.1 404 Not Found\n\n'
 
 while 1:    
     print('Listen....')
-    conn, addr = sock.accept() # зависаем в ожидании    
-    data = conn.recv(4096).decode() # принимаем данные по 4 КБайт    
+    conn, addr = sock.accept() # зависаем в ожидании  
+    data = conn.recv(4096).decode() # принимаем данные по 4 КБайт 
+    print(data)   
+    # data = ''  
+    # while 1:
+    #     rec = conn.recv(2).decode() # принимаем данные по 4 КБайт    
+    #     if not rec:
+    #         break
+    #     data += rec
+    
+    
+        
     
     try:
         path = data.split('\n')[0].split()[1] # получаем path из 1ой строки http                        
