@@ -1,0 +1,97 @@
+/*
+блочный строчный
+размер - px, % от родителя, vw vh - % от экрана, em, rem, 
+
+СЕЛЕКТОРЫ
+p, a - все р и а
+div p - все потомки
+div>p - только один потомок
+div ul + ul - плюс следующий элемент после указанного 
+br ~ p - все р перед которыми есть br
+a[target='_blank'] - только конкретные а
+a[href^='https'] - url начинается на https
+a[href$='.by'] - url заканчивается на .by
+a[href*='task'] - url содержит task
+:nth-child(2n) - каждый второй
+
+
+Веса селекторов
+style=""     1,0,0,0
+#id          0,1,0,0
+.class       0,0,1,0
+[attr=value] 0,0,1,0
+LI (по тэгу) 0,0,0,1 
+
+
+*/
+
+
+body{
+    margin: 0px;
+    padding: 0px;
+    background-color: blanchedalmond;
+    border: solid 1px black;
+    background-image: url(https://img.freepik.com/free-vector/beautiful-watercolor-background_23-2148486848.jpg);    
+    margin: auto;    
+    width: 90%;
+    height: 100vh;
+    background-size: cover;
+}
+
+main{
+    background-color: rgb(127, 185, 255);
+    /* display: none; */
+    width: 100%;    
+    /* overflow: hidden; */
+    font-size: 100%;
+    border: 1px solid black;
+    /* height: 210px; */
+    min-height: 210px;
+    max-height: 300px;
+    /* min-width: 210px; */
+    overflow: auto;
+}
+
+.shadow{ /* class */ 
+    text-shadow: 2px 3px 3px black;
+    display: inline-block;
+    width: 70px;
+    height: 70px;
+    background-color: chocolate;
+    margin: 10px;
+    text-align: center;
+    line-height: 70px;
+    transition: all 0.5s;
+}
+
+
+.shadow:hover{
+    box-shadow: 5px 5px 8px 0px #4c2e2e
+}
+
+.blue{
+    color: blue;
+}
+#shadow4{ /* id */
+    background-color: rgb(8, 97, 97);
+    /* padding: 20px 0px; */
+}
+.sp1{
+    color: red;
+    background-color: blueviolet;
+    
+}
+
+.cl1{
+    width: 70px;
+    height: 70px;
+    float: left;
+    border: 1px solid black;
+    margin: 5px;
+
+}
+
+.clear{
+    clear: both;
+}
+
