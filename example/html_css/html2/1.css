@@ -5,6 +5,7 @@
 СЕЛЕКТОРЫ
 p, a - все р и а
 div p - все потомки
+.class1 p - все потомки
 div>p - только один потомок
 div ul + ul - плюс следующий элемент после указанного 
 br ~ p - все р перед которыми есть br
@@ -21,6 +22,15 @@ style=""     1,0,0,0
 .class       0,0,1,0
 [attr=value] 0,0,1,0
 LI (по тэгу) 0,0,0,1 
+
+Позиционирование
+static - дефолт
+relative - 
+absolute - 
+fixed 
+sticky
+
+
 
 
 */
@@ -50,6 +60,8 @@ main{
     max-height: 300px;
     /* min-width: 210px; */
     overflow: auto;
+    position: relative;
+    margin-top: 100px;
 }
 
 .shadow{ /* class */ 
@@ -75,6 +87,11 @@ main{
 #shadow4{ /* id */
     background-color: rgb(8, 97, 97);
     /* padding: 20px 0px; */
+    /* position: relative; */
+    position: relative;
+    bottom: 0px;
+    right: 0px;
+
 }
 .sp1{
     color: red;
@@ -88,10 +105,30 @@ main{
     float: left;
     border: 1px solid black;
     margin: 5px;
-
 }
 
 .clear{
     clear: both;
 }
 
+.modal{
+    background-color: rgba(137, 43, 226, 0.817);
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 10;
+}
+
+.modal_window{
+    width: 200px;
+    height: 200px;
+    background-color: rgb(220, 209, 163);
+    position: fixed;    
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    
+}

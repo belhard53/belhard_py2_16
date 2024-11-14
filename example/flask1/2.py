@@ -1,4 +1,5 @@
-from flask import Flask, render_template, url_for, redirect, session, request
+from flask import (Flask, render_template, url_for, redirect, 
+                            session, request, jsonify)
 import os
 
 BASE_FOLDER = os.getcwd()
@@ -52,6 +53,12 @@ def edit():
 @app.route('/view/')
 def view():    
     return "view"
+
+@app.route('/api/users/')
+def api1():    
+    d = [{"email": "user1@gmail.com", "id": 1},
+         {"email": "user2@gmail.com", "id": 2}]
+    return jsonify(d)
 
 @app.route('/form1/', methods=['GET', 'POST'])
 def form1():    
