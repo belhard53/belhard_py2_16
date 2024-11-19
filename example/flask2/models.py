@@ -156,13 +156,13 @@ for quiz in quizes:
         
         
 # взять вопрос по id (так работает только по id) самый быстрый метод
-question = Question.query.get(id)
+question = db.session.query(Question).get(id)
 
 # сколько вопросов в квизе
 len(quiz.question) 
 
 # Добавить в квиз вопрос с id = 1
-quiz.question.append(Question.query.get(1))
+quiz.question.append(db.session.query(Question).get(1))
 db.session.commit()
 
 # найти вопросы id которых есть в списке или не в списке
@@ -170,7 +170,7 @@ questions = Question.query.filter(Question.id.in_([1,2,3])).all()
 questions = Question.query.filter(Question.id.not_in([1,2,3])).all()  
 
 # изменить данные
-question = Question.query.get(id)
+question = db.session.query(Question).get(id)
 question.question = 'измененный вопрос'
 question.answer = 'измененный правильный ответ'
 user.name = "Vasya"
@@ -178,11 +178,11 @@ db.session.commit()
     
 # удалить квиз
 Quiz.query.filter_by(id = id).delete()
-Quiz.query.get(id).delete()
+db.session.query(Quiz).get(id).delete()
 db.session.commit()
 
 # отвязать вопрос от квиза
-question = Question.query.get(id)
+question = db.session.query(Question).get(id)
 quiz.question.remove(question)
 db.session.commit()
 

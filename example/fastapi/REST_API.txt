@@ -1,0 +1,28 @@
+
+
+SOAP - xml
+GraphQL - язык запросов
+REST API - json - архитектурный стиль
+
+
+/api/quizes/
+    GET - все квизы
+    POST {name:quiz1} - добавить в базу - вернет в ответ id
+    
+/api/quizes/int:id/ -  
+    GET - вернуть 1 квиз с id
+    PUT - {name:quiz2} - обновить данные c id
+    DELETE   - удалить по id
+    
+/api/quizes?question_id=1 - все квизы с вопросом 1
+/api/questions?quiz_id=1    
+
+api/auth/ - отправить пас логин - возвращает токен
+
+
+тестовый REST API - 
+https://jsonplaceholder.typicode.com/    
+
+
+пример api ЕГР
+https://egr.gov.by/api/swagger-ui.html#/main-controller

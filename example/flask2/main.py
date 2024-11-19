@@ -1,5 +1,6 @@
 
-from flask import Flask, redirect, render_template, request, session, url_for
+from flask import (Flask, redirect, render_template, 
+                request, session, url_for, jsonify)
 import os
 from models import db, User, Question, Quiz, db_add_new_data
 import sys
@@ -14,7 +15,7 @@ app = Flask(__name__,
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_PATH}'
 app.config['SECRET_KEY'] = 'secretkeysecretkeysecretkey1212121'
-
+app.config['JSON_AS_ASCII'] = False
 db.init_app(app)
 
 html_config = {
@@ -115,4 +116,35 @@ def page_not_found(e):
     return '<h1 style="color:red; text-align:center; margin-top:100px"> Упс..... </h1>'
 
 
-app.run(debug=True, port=5500)
+
+
+# ---------------- API 
+@app.route('/api/quizes/', methods = ['GET'])
+def api_get():
+    quizes = Quiz.query.all()
+    json = [{'name':q.name, 'id':q.id, 'user_id':q.user_id}  for q in quizes]    
+    return jsonify(json)
+
+
+
+@app.route('/api/quizes/', methods = ['POST'])
+def api_post():
+    quiz = Quiz('Quiz123', db.session.query(User).get(1))
+    db.session.add(quiz)
+    db.session.commit()
+    return jsonify({"id":quiz.id})
+
+
+    
+@app.route('/api/quizes/<int:id>/', methods = ['GET'])
+def api_get_id(id):    
+    quiz = db.session.query(Quiz).get(id)    
+    return jsonify(dict(name=quiz.name, user_ud=quiz.user_id))
+    
+
+
+
+
+app.run(debug=True, port=5500, host="0.0.0.0") 
+
+
