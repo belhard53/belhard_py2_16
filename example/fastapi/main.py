@@ -27,7 +27,7 @@ app.include_router(quizes_router)
 app.include_router(default_router)
 
 if __name__ == '__main__':    
-    uvicorn.run ("main:app", reload=True) 
+    uvicorn.run ("main:app", reload=True, port=8100) 
     
 # uvicorn main:app --reload
 # uvicorn main:app --host 0.0.0.0 --port 8000 --reload

@@ -2,6 +2,7 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy import select, Integer, ForeignKey, String, Table, Column
 from schema import UserAdd
+from fastapi_filter.contrib.sqlalchemy import Filter
 
 
 engine = create_async_engine("sqlite+aiosqlite:///db//fastapi.db")
@@ -17,6 +18,54 @@ class UserOrm(Model):
     age: Mapped[int]
     phone :Mapped[str|None]
     quiz = relationship('QuizOrm', backref='user')
+
+
+class UserFilter(Filter):
+    name: str | None = None
+    name__like: str | None = None
+    name__startswith: str | None = None
+    phone__in: list[str] | None = None
+    # для in перечисление через запятую без пробела
+    # http://127.0.0.1:8100/users?limit=3&offset=0&phone__in=11,22 
+    
+    
+    
+    order_by: list[str] = ['age']
+    # для обратной сортировки перед именем поля добавить минус
+    # http://127.0.0.1:8100/users?limit=5&offset=0&order_by=-age
+    # если сортировка по нескольким полям - поля указывать чз запятую без пробела
+    # http://127.0.0.1:8100/users?limit=5&offset=0&order_by=age,name
+    class Constants(Filter.Constants):
+        model = UserOrm
+
+
+
+'''
+добавляются к названию поля через два "_"
+
+Сравнительные операторы :
+    eq: равно
+    neq(или ): не равно not
+    gt: больше
+    lt: меньше
+    gte: больше или равно
+    lte: меньше или равно
+Операторы для работы с коллекциями :
+    in: принадлежит множеству
+    not_in: не принадлежит множеству
+Операторы для строковых данных :
+    like: соответствует шаблону 
+    ilike: регистронезависимый поиск по шаблону
+    startswith: начинается с
+    endswith:кончается на
+    contains:содержит подстроку
+    not_like: не соответствует шаблону
+Специальные операторы :
+    isnull: проверка на NULL
+    not_isnull:проверка на NOT NULL
+
+'''
+
 
 
 
@@ -59,7 +108,19 @@ async def add_test_data():
         users = [
             UserOrm(name='user1', age=20),
             UserOrm(name='user2', age=30, phone='123456789'),
-            UserOrm(name='user3', age=40),
+            UserOrm(name='user3', age=41, phone='11'),
+            UserOrm(name='user4', age=42, phone='22'),
+            UserOrm(name='user5', age=43, phone='33'),
+            UserOrm(name='user6', age=44),
+            UserOrm(name='user7', age=45),
+            UserOrm(name='user8', age=46),
+            UserOrm(name='user9', age=47),
+            UserOrm(name='user10', age=40),
+            UserOrm(name='user11', age=40),
+            UserOrm(name='user12', age=40),
+            UserOrm(name='user13', age=40),
+            UserOrm(name='user14', age=40),
+            UserOrm(name='user13', age=40),
         ]
         quizzes = [
             QuizOrm(name='quiz1', user=users[0]),
@@ -82,9 +143,9 @@ async def add_test_data():
         quizzes[2].question.append(questions[2])
 
         session.add_all(quizzes)
+        session.add_all(users[3:])
         
-        print(111111111111111111111111)
-        print(quizzes)
+        
         await session.flush()
         await session.commit()
 
@@ -102,9 +163,14 @@ class UserRepository:
             return user.id
         
     @classmethod
-    async def get_users(cls) -> list[UserOrm]:
+    async def get_users(cls, limit, offset, user_filter) -> list[UserOrm]:
         async with new_session() as session:
-            query = select(UserOrm)
+            
+            query = select(UserOrm) #.join()
+            query = user_filter.filter(query).limit(limit).offset(offset) 
+            query = user_filter.sort(query)
+            # для обратной сортировки перед именем поля добавить минус
+            # http://127.0.0.1:8100/users?limit=5&offset=0&order_by=-age
             res = await session.execute(query)
             users = res.scalars().all()
             return users
