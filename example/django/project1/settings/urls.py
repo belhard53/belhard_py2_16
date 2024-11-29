@@ -20,14 +20,45 @@ from django.contrib import admin
 from django.urls import path, include
 from main import views
 from debug_toolbar.toolbar import debug_toolbar_urls
+from django.conf import settings
+from django.conf.urls.static import static
+from django.views.decorators.cache import cache_page
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     
     path('', views.index, name='index'),    
-    path('student/<int:id>/', views.student, name='student'),
-    path('students/', views.students, name='students'),
+    
+    # старые - на основании функций
+    # path('student/<int:id>/', views.student, name='student'),
+    # path('students/', views.students, name='students'),
+    
+    # на основании классов
+    path('students/', views.StudentsView.as_view(), name='students'),
+    path('student/<slug:name_slug>/', views.StudentView.as_view(), name='student'),    
+    path('students/add/', views.StudentAddView.as_view(), name='student_add'),
+    # path('students/<int:id>/edit/', views.StudentEditView.as_view(), name='student_edit'),
+    path('students/<int:id>/edit/', views.student_edit_view, name='student_edit'),
+    
+    
+    # если нужен кеш - включается или тут или на views декоратором
+    #path('courses/', cache_page(60*15)(Courses.as_view()), name='courses',),
+    path('courses/', views.Courses.as_view(), name='courses',),    
+    path('courses/<int:id>/', views.Show_course.as_view(), name='course',),
+    path('courses/add/', views.course_add_view, name='course_add'),
+    path('courses/<int:id>/edit/', views.CourseEditView.as_view(), name='course_edit',),
+    
+    
+    path('reg/', views.reg_user, name='reg',),
+    path('login/', views.login_user, name='login',),
+    path('logout/', views.logout_user, name='logout',),
     
     path('app1/', include('app1.urls')), 
     
 ] + debug_toolbar_urls()
+
+if settings.DEBUG:
+    urlpatterns += static(            
+            settings.MEDIA_URL, 
+            document_root=settings.MEDIA_ROOT)

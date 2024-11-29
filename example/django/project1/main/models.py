@@ -1,13 +1,15 @@
+from typing import Iterable
 from django.db import models
 from django.urls import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
-# Create your models here.
+
+
 
 
 class Students(models.Model):
     name = models.CharField(
         max_length=30,
-        verbose_name="Студент",
+        verbose_name="Имя",
         null=False,
         blank = False,
         # unique = True
@@ -18,10 +20,18 @@ class Students(models.Model):
         # error_messages # переопределить сообщения об ошибках - null, blank, invalid, unique_for_date
         # help_text #Дополнительный текст «помощи», который будет отображаться с виджетом формы.
         # unique_for_date
-        
-        )
+    )
     
     surname = models.CharField(max_length=30, verbose_name="Фамилия")
+    
+    # поле для формирования уникальной ссылки из символов а не id
+    slug = models.SlugField(
+                max_length=255, 
+                unique=True, 
+                db_index=True, 
+                verbose_name="URL",
+                help_text="только латинские")
+    
     sex = models.CharField(max_length=10, 
                         choices=[('m','Мужчина'),('w', 'Женщина')], verbose_name="Пол")
     active = models.BooleanField(verbose_name="Активный")
@@ -35,12 +45,20 @@ class Students(models.Model):
                             blank=True,
                             verbose_name = 'Посещаемые курсы') 
     
+    # автоматическое поле  
+    time_create = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
+    # автоматическое поле 
+    time_update = models.DateTimeField(auto_now=True, verbose_name="Время изменения")
     
-    # # pip install pillow
-    # photo = models.ImageField(
-    #         upload_to=r'photos/%Y/%m/%d', 
-    #         blank=True,
-    #         verbose_name="Фoто")
+    # # pip install pillow 
+    photo = models.ImageField(
+            upload_to=r'photos/%Y/%m/%d', 
+            blank=True,
+            verbose_name="Фoто")
+    
+    #  для фото добавить в urls 
+    # if settings.DEBUG:
+    #     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     
     
     
@@ -49,8 +67,18 @@ class Students(models.Model):
     
     
     def get_absolute_url(self):
-        return reverse('student', kwargs={"id":self.pk})
+        return reverse('student', kwargs={"name_slug":self.slug})
+    
+    def get_edit_url(self):        
+        return reverse('student_edit', kwargs={"id":self.pk})
 
+    # # для того чтобы slug создавался автоматически
+    # pip install pytils
+    # rom pytils.translit import slugify
+    # def save(self, *args, **kwargs) -> None:
+    #     if not self.slug:
+    #         self.slug = slugify(self.surname+"-"+self.name)
+    #     return super().save(*args, **kwargs)
 
     class Meta:
         indexes = [models.Index(fields=['surname'])]
@@ -83,6 +111,14 @@ class Course(models.Model):
         return f"{self.get_name_display()} - {self.course_num}"
     
     
+    def get_absolute_url(self):
+        return reverse('course', kwargs={"id":self.pk})
+    
+    
+    def get_edit_url(self):        
+        return reverse('course_edit', kwargs={"id":self.pk})
+    
+    
     class Meta:
         unique_together = [['name', 'course_num']]
         verbose_name = "Курс"
@@ -90,6 +126,50 @@ class Course(models.Model):
         ordering = ['name', 'course_num']
         
         
+        
+        
+class Grade(models.Model):
+    person = models.ForeignKey(
+            Students, 
+            on_delete=models.CASCADE,
+            related_name="grades",
+            verbose_name = 'Чья оценка')
+    
+    grade = models.PositiveSmallIntegerField(
+        default=0,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        verbose_name = 'Оценка'
+    )
+    
+    course = models.ForeignKey(
+            Course, 
+            null=True,
+            on_delete=models.CASCADE,
+            verbose_name = 'Курс')
+    
+    date = models.DateField(verbose_name = 'Дата оценки', null=True)
+    
+    
+    date_add = models.DateField(
+            auto_now_add=True, 
+            null=True,
+            verbose_name = 'Дата добавления')
+    
+    date_update = models.DateField(
+            auto_now=True,
+            null=True,
+            verbose_name = 'Дата изменения')
+
+    
+
+    class Meta:
+        verbose_name = "Оценка"
+        verbose_name_plural = "Оценки"    
+        
+        
+        
+        
+                
         
 '''
 CRUD

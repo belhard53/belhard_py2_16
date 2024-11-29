@@ -14,14 +14,22 @@
         <div class="students-cell"> ФИО</div>
         <div class="students-cell"> Возраст  </div>
         <div class="students-cell"> Пол  </div>
+        <div class="students-cell"> ФОТО  </div>
 
         {% for s in students %}
             <div class="students-cell">{{ forloop.counter}}</div>
             <div class="students-cell"> <a href="{{ s.get_absolute_url }}">{{s.name}} {{s.surname}}</a></div>
             <div class="students-cell"> {{s.age}} </div>
             <div class="students-cell"> {{s.get_sex_display}} </div>            
+            <div class="students-cell">
+            {% if s.photo %}
+                <img class="img-student thumb" src="{{ s.photo.url }}" alt="Нету">
+            {% endif %}
+            </div>
         {% endfor %}
     </div>
+    <div class="add_button"><a href="{% url 'student_add' %}">Добавить</a></div>
+
 {% endblock %}
 
 
