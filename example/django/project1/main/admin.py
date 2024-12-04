@@ -7,7 +7,7 @@ admin.site.register(Grade)
 
 @admin.register(Students)
 class StudentsAdmin(admin.ModelAdmin):
-    list_display = ('surname', 'name','sex', 'active', 'average_grade1')
+    list_display = ('id', 'surname', 'name','sex', 'active', 'average_grade1')
     search_fields = ('name', 'surname')
     list_filter = ('sex', 'active')
     prepopulated_fields = {"slug": ("name", "surname")}

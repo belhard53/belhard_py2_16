@@ -33,6 +33,25 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer', # если убрать в браузере не будет документации
+    ],
+
+    # пагинация
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 2,
+
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ]
+}
+
+
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -45,6 +64,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "main",
     "app1",
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

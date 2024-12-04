@@ -6,11 +6,13 @@ from .models import *
 from django.urls import reverse_lazy
 
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
-from .forms import StudentAddForm, CourseAddForm, CourseAddForm2
+from .forms import StudentAddForm, CourseAddForm, CourseAddForm2, RegisterUserForm
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import logout, login
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.views import LoginView
 
 from django.views.decorators.cache import cache_page
 
@@ -79,7 +81,7 @@ class StudentAddView(LoginRequiredMixin, CreateView):
     form_class = StudentAddForm
     template_name = 'student_add_form.html'
     success_url = reverse_lazy('students')
-    login_url = '/admin/'
+    login_url = '/login/'
     
     
 
@@ -157,8 +159,27 @@ def course_add_view(r):
         form = CourseAddForm()
     return render(r, 'course_add_form.html', {'form':form})
         
+
+
+class RegisterUser(CreateView):
+    form_class = RegisterUserForm #UserCreationForm - джанговская формма
+    template_name = 'reg.html'
+    # success_url = reverse_lazy('login') # для входа сайта
+    
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return redirect('index')
+
     
     
+class LoginUser(LoginView):
+    form_class = AuthenticationForm 
+    template_name = 'login.html'
+    
+    def get_success_url(self) -> str:
+        return reverse_lazy('index')
+
     
     
 def logout_user(r):

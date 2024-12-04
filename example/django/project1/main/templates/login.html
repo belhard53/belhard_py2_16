@@ -8,10 +8,21 @@
     <h2>ЛОГИН</h2>
 {% endblock %}
 
-{% block content1 %}
-    <h1>ЛОГИН</h1>
-{% endblock %}
 
+
+{% block content1 %}
+    
+    <form class="persons_forms_reg" method="post">
+
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <input type="submit" value="Войти">
+
+
+</form> 
+
+{% endblock %}
 
 
 

@@ -50,11 +50,12 @@ urlpatterns = [
     path('courses/<int:id>/edit/', views.CourseEditView.as_view(), name='course_edit',),
     
     
-    path('reg/', views.reg_user, name='reg',),
-    path('login/', views.login_user, name='login',),
+    path('reg/', views.RegisterUser.as_view(), name='reg',),
+    path('login/', views.LoginUser.as_view(), name='login',),
     path('logout/', views.logout_user, name='logout',),
     
     path('app1/', include('app1.urls')), 
+    path('api/', include('main.urls_rest')), 
     
 ] + debug_toolbar_urls()
 
