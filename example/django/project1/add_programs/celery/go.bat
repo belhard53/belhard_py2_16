@@ -1,0 +1,1 @@
+celery --app=app.app worker --pool=solo
